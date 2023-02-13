@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.os.IResultReceiver;
 import android.util.Log;
 
 public class WordListOpenHelper extends SQLiteOpenHelper {
@@ -196,6 +197,45 @@ public class WordListOpenHelper extends SQLiteOpenHelper {
         }
 
         return mNumberOfRowsUpdated;
+
+    }
+
+
+    public Cursor search(String searchString) {
+
+        String[] columns = new String[]{KEY_WORD};
+
+        searchString = "%" + searchString + "%";
+
+        String where = KEY_WORD + " LIKE ?";
+
+        String[] whereArgs = new String[]{searchString};
+
+        Cursor cursor = null;
+
+        try {
+
+            if (this.mReadableDB == null) {
+                this.mReadableDB = getReadableDatabase();
+            }
+
+            cursor = this.mReadableDB.query(
+                    WORD_LIST_TABLE,
+                    columns,
+                    where,
+                    whereArgs,
+                    null,
+                    null,
+                    null
+            );
+
+
+        } catch (Exception e) {
+            Log.d(TAG, "SEARCH EXCEPTION: " + e.getMessage());
+        }
+
+
+        return cursor;
 
     }
 

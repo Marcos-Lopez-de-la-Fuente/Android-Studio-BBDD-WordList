@@ -102,8 +102,11 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
                 });
 
                 builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-                    wordListOpenHelper.delete(id);
-                    notifyItemRemoved(holder.getAdapterPosition());
+
+                    int deleted = wordListOpenHelper.delete(id);
+                    if (deleted >= 0) {
+                        notifyItemRemoved(holder.getAdapterPosition());
+                    }
                 });
 
                 builder.create().show();
